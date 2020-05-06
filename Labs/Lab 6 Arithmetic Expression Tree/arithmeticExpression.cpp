@@ -29,9 +29,6 @@ int arithmeticExpression::priority(char op){
     if(op == '('){
         priority =  3;  
     }   
-    else if(op == ')'){
-        priority =  4;  
-    }   
     else if(op == '*' || op == '/'){
         priority = 2;
     }   
@@ -77,7 +74,7 @@ string arithmeticExpression::buildPostfix() {
 	return postfix;
 }
 */
-
+/*
 TreeNode* arithmeticExpression::buildLeftChild(stack<char> stack,::stack<char> keyStack) {
 	TreeNode* returnNode = nullptr;
 	char key = keyStack.top();
@@ -146,22 +143,39 @@ void arithmeticExpression::buildTree() {
 		root->right = buildRightChild(stack, keyStack);
 	}
 }
+*/
+void arithmeticExpression::buildTree() {
+	string postfix = infix_to_postfix();
+	stack<TreeNode*> stack;
+
+	for (long unsigned int i = 0; i < postfix.size(); i++) {
+		if (priority(postfix.at(i)) == 0) {
+			stack.push(new TreeNode(postfix.at(i), 0));
+		}
+		else {
+			TreeNode* subTree = new TreeNode(postfix.at(i),0);
+			subTree->right = stack.top();
+			stack.pop();
+			subTree->left = stack.top();
+			stack.pop();
+			stack.push(subTree);	
+		}
+	}
+	root = stack.top();
+}
 
 void arithmeticExpression::infix() { infix(root); }
 
-void arithmeticExpression::infix(TreeNode* node) {
-	if (node) {
-		if (priority(node->data) == 2 || priority(node->data) == 1) {
-			//if it is * or / or + or - put paranthesis
-			cout << " (";
-			infix(node->left);
-			cout << ' ' << node->data;
-			infix(node->right);
-			cout << " )";
-		}
-		else
-			cout << ' ' << node->data;
-	}
+void arithmeticExpression::infix(TreeNode *node) {
+    if (node->left != nullptr) {
+        cout << "(";
+        infix(node->left);
+    }
+    cout << node->data;
+    if (node->right != nullptr) {
+        infix(node->right);
+        cout << ")";
+    }
 }
 
 string arithmeticExpression::infix_to_postfix(){
@@ -221,7 +235,7 @@ void arithmeticExpression::visualizeTree(const string &outputFilename){
     system(command.c_str());
 }
 
-void visualizeTree(ofstream &, TreeNode *) { }
+void arithmeticExpression::visualizeTree(ofstream &, TreeNode *) { }
 
 void arithmeticExpression::prefix() {
     prefix(root);
@@ -232,12 +246,12 @@ void arithmeticExpression::postfix() {
 }
 
 void arithmeticExpression::prefix(TreeNode *node) {
-    cout << node->key;
+    cout << node->data;
     if (node->left != nullptr) {
-        postfix(node->left);
+        prefix(node->left);
     } 
     if (node->right != nullptr) {
-        postfix(node->right);
+        prefix(node->right);
     }
 }
 
@@ -248,5 +262,5 @@ void arithmeticExpression::postfix(TreeNode *node) {
     if (node->right != nullptr) {
         postfix(node->right);
     } 
-    cout << node->key;
+    cout << node->data;
 }

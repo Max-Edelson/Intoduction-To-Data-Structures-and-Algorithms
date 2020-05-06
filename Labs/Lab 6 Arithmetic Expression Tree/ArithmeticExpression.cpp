@@ -1,18 +1,22 @@
-#include "ArithmeticExpression.h"
+#include "arithmeticExpression.h"
 
 #include <iostream>
 #include <stack>
-#include <vector>
+#include <sstream>
+#include <string>
+#include <fstream>
+
+using namespace std;
 
 arithmeticExpression::arithmeticExpression(const string& givenExpression) : infixExpression(givenExpression), root(nullptr) {}
 
 arithmeticExpression::~arithmeticExpression() { 
 	deleteNodes(root); 
-	root = null;
+	root = nullptr;
 }
 
 void arithmeticExpression::deleteNodes(TreeNode* node) {
-	if (root) {
+	if (node) {
 		deleteNodes(node->left);
 		deleteNodes(node->right);
 
@@ -20,6 +24,24 @@ void arithmeticExpression::deleteNodes(TreeNode* node) {
         }
 }
 
+int arithmeticExpression::priority(char op){
+    int priority = 0;
+    if(op == '('){
+        priority =  3;  
+    }   
+    else if(op == ')'){
+        priority =  4;  
+    }   
+    else if(op == '*' || op == '/'){
+        priority = 2;
+    }   
+    else if(op == '+' || op == '-'){
+        priority = 1;
+    }   
+    return priority;
+}
+
+/*
 string arithmeticExpression::buildPostfix() {
 	string postfix;
         int priority = 0;
@@ -54,15 +76,22 @@ string arithmeticExpression::buildPostfix() {
         }  
 	return postfix;
 }
+*/
 
-TreeNode* buildLeftChild(stack<char> stack, stack<char> keyStack) {
-	TreeNode* returnNode == nullptr;
+TreeNode* arithmeticExpression::buildLeftChild(stack<char> stack,::stack<char> keyStack) {
+	TreeNode* returnNode = nullptr;
+	char key = keyStack.top();
+	char stackKey = stack.top();
 
 	if (priority(stack.top()) == 0) {
-		returnNode = new TreeNode(stack.pop(),keyStack.pop());
+		stack.pop();
+		keyStack.pop();
+		returnNode = new TreeNode(stackKey, key);
 	}	
 	else {
-		returnNode = new TreeNode(stack.pop(),keyStack.pop());
+		stack.pop();
+                keyStack.pop();
+                returnNode = new TreeNode(stackKey, key);
 		returnNode->left = buildLeftChild(stack, keyStack);
 		returnNode->right = buildRightChild(stack, keyStack);
 	}
@@ -70,14 +99,20 @@ TreeNode* buildLeftChild(stack<char> stack, stack<char> keyStack) {
 	return returnNode;
 }
 
-TreeNode* buildRightChild(stack<char> stack, stack<char> keyStack) {
-	TreeNode* returnNode == nullptr;
+TreeNode* arithmeticExpression::buildRightChild(stack<char> stack, ::stack<char> keyStack) {
+	TreeNode* returnNode = nullptr;
+	char key = keyStack.top();
+        char stackKey = stack.top();
 
         if (priority(stack.top()) == 0) {
-                returnNode = new TreeNode(stack.pop(),keyStack.pop());
+		stack.pop();
+                keyStack.pop();
+                returnNode = new TreeNode(stackKey, key);
         }    
         else {
-                returnNode = new TreeNode(stack.pop(),keyStack.pop());
+		stack.pop();
+                keyStack.pop();
+                returnNode = new TreeNode(stackKey, key);
                 returnNode->left = buildLeftChild(stack, keyStack);
                 returnNode->right = buildRightChild(stack, keyStack);
         }   
@@ -86,23 +121,29 @@ TreeNode* buildRightChild(stack<char> stack, stack<char> keyStack) {
 }
 
 void arithmeticExpression::buildTree() {
-	string postfix = buildPostfix();
+	string postfix = infix_to_postfix();
 
-	stack<char> stack;
-	stack<char> keyStack;
-	for (int i = 0; i < postfix.size(); i++) {
+	::stack<char> stack;
+	::stack<char> keyStack;
+	for (long unsigned int i = 0; i < postfix.size(); i++) {
 		stack.push(postfix.at(i));
 		keyStack.push(97 + i);
 	}
+	 char key = keyStack.top();
+        char stackKey = stack.top();
 
 	//tree is single node
 	if (priority(stack.top()) == 0) {
-		root = new TreeNode(stack.pop(), keyStack.pop());
+		stack.pop();
+                keyStack.pop();
+                root = new TreeNode(stackKey, key);
 	}
 	else {
-		root = new TreeNode(stack.pop(), keyStack.pop());
-		root->leftChild = buildLeftChild(stack);
-		root->rightChild = buildRightChild(stack);
+		stack.pop();
+                keyStack.pop();
+                root = new TreeNode(stackKey, key);
+		root->left = buildLeftChild(stack, keyStack);
+		root->right = buildRightChild(stack, keyStack);
 	}
 }
 
@@ -112,32 +153,15 @@ void arithmeticExpression::infix(TreeNode* node) {
 	if (node) {
 		if (priority(node->data) == 2 || priority(node->data) == 1) {
 			//if it is * or / or + or - put paranthesis
-			cout << ' (';
+			cout << " (";
 			infix(node->left);
 			cout << ' ' << node->data;
 			infix(node->right);
-			cout << ' )';
+			cout << " )";
 		}
 		else
 			cout << ' ' << node->data;
 	}
-}
-
-int arithmeticExpression::priority(char op){
-    int priority = 0;
-    if(op == '('){
-        priority =  3;
-    }
-    else if(op == ')'){
-        priority =  4;
-    }
-    else if(op == '*' || op == '/'){
-        priority = 2;
-    }
-    else if(op == '+' || op == '-'){
-        priority = 1;
-    }
-    return priority;
 }
 
 string arithmeticExpression::infix_to_postfix(){
@@ -196,45 +220,33 @@ void arithmeticExpression::visualizeTree(const string &outputFilename){
     string command = "dot -Tjpg " + outputFilename + " -o " + jpgFilename;
     system(command.c_str());
 }
-main.cpp test harness
 
-Use this main.cpp file for testing your program.
+void visualizeTree(ofstream &, TreeNode *) { }
 
-#include <iostream>
-#include "arithmeticExpression.h"
+void arithmeticExpression::prefix() {
+    prefix(root);
+}
 
-using namespace std;
+void arithmeticExpression::postfix() {
+    postfix(root);
+}
 
-int main(){
-    string expr1 = "a+b*c";
-    arithmeticExpression ex1(expr1);
-    ex1.buildTree();
-    cout<<"expression 1: "<<expr1<<endl;
-    cout<<"infix: "; ex1.infix(); cout<<endl;
-    cout<<"prefix: "; ex1.prefix(); cout<<endl;
-    cout<<"postfix: "; ex1.postfix(); cout<<endl;
-    //ex1.visualizeTree("expr1.dot");
-    cout<<endl;
+void arithmeticExpression::prefix(TreeNode *node) {
+    cout << node->key;
+    if (node->left != nullptr) {
+        postfix(node->left);
+    } 
+    if (node->right != nullptr) {
+        postfix(node->right);
+    }
+}
 
-    string expr2 = "(a+b)*(c-d)";
-    arithmeticExpression ex2(expr2);
-    ex2.buildTree();
-    cout<<"expression 2: "<<expr2<<endl;
-    cout<<"infix: "; ex2.infix(); cout<<endl;
-    cout<<"prefix: "; ex2.prefix(); cout<<endl;
-    cout<<"postfix: "; ex2.postfix(); cout<<endl;
-    //ex2.visualizeTree("expr2.dot");
-    cout<<endl;
-
-    string expr3 = "a + b * c - ( d * e + f ) * g";
-    arithmeticExpression ex3(expr3);
-    ex3.buildTree();
-    cout<<"expression 3: "<<expr3<<endl;
-    cout<<"infix: "; ex3.infix(); cout<<endl;
-    cout<<"prefix: "; ex3.prefix(); cout<<endl;
-    cout<<"postfix: "; ex3.postfix(); cout<<endl;
-    //ex3.visualizeTree("expr3.dot");
-    cout<<endl;
-
-    return 0;
+void arithmeticExpression::postfix(TreeNode *node) {
+    if (node->left != nullptr) {
+        postfix(node->left);
+    } 
+    if (node->right != nullptr) {
+        postfix(node->right);
+    } 
+    cout << node->key;
 }

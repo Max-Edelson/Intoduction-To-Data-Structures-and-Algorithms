@@ -2,6 +2,7 @@
 #define ARITHMETICEXPRESSION_H
 #include <iostream>
 #include <cstdlib>
+#include <stack>
 
 using namespace std;
 struct TreeNode{
@@ -22,6 +23,8 @@ class arithmeticExpression{
     to the value of parameter passed in. */
     arithmeticExpression(const string &);
 
+	~arithmeticExpression();
+
     /* Implementation of destrucor is optional.
        The destructor should deallocate all the nodes in the tree. */
     //~arithmeticExpression();
@@ -41,6 +44,7 @@ class arithmeticExpression{
     void postfix();
 
     /* Calls the recursive visualizeTree function and generates the .png file using system call. */
+
     void visualizeTree(const string &);
 
  private:

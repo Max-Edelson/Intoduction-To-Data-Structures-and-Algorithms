@@ -4,13 +4,14 @@
 
 using namespace std;
 
-void printOrders(BSTree *tree) {
+void printOrders(BSTree tree) {
   cout << "Preorder = ";
-  tree->preOrder( );
-  cout << "Inorder = ";
-  tree->inOrder( );
-  cout << "Postorder = ";
-  tree->postOrder( );
+  tree.preOrder( );
+  cout << endl << "Inorder = ";
+  tree.inOrder( );
+  cout << endl << "Postorder = ";
+  tree.postOrder( );
+  cout << endl;
 }
 
 int menu() {
@@ -37,8 +38,6 @@ int menu() {
 
 int main( ) {
     // Pass all your tests before running the executable main
-    run_tests();  // TODO: Remove before submitting
-    return 0;
 
     BSTree tree;
 
@@ -50,18 +49,37 @@ int main( ) {
     
         if (choice == 1) {
           cout << "Enter string to insert: ";
+		getline(cin, entry);
+		tree.insert(entry);
         } else if (choice == 2) {
-          cout << "Enter string to remove: ";
+          cout << "Enter string to remove: " << endl;
+		getline(cin, entry);
+		tree.remove(entry);
         } else if (choice == 3) {
+		printOrders(tree);
         } else if (choice == 4) {
           cout << "Enter string to search for: ";
+		getline(cin, entry);
+		if (!tree.search(entry))
+			cout << endl << "Not Found" << endl;
+		else
+			cout << endl << "Found" << endl;
         } else if (choice == 5) {
           cout << "Smallest: " << endl;
+		string smallest = tree.smallest();
+		cout << smallest << endl;
         } else if (choice == 6) {
           cout << "Largest: " << endl;
+		string largest = tree.largest();
+		cout << largest << endl;
         } else if (choice == 7) {
-          cout << "Enter string: ";
+          cout << "Enter string: " << endl;;
+		getline(cin, entry);
+		int heightOfEntry = tree.height(entry);
+		cout << "Height of subtree rooted at " << entry << ": " << heightOfEntry << endl;
         }
+	else if (choice == '8')
+		break;
         //fix buffer just in case non-numeric choice entered
         choice = menu();
     }

@@ -1,6 +1,10 @@
 #ifndef __BSTREE_H__
 #define __BSTREE_H__
 
+#include <iostream>
+#include "Node.h"
+using namespace std;
+
 class BSTree {
     private:
         Node *root;
@@ -42,24 +46,33 @@ class BSTree {
            It should return true if the string is in the tree, and false otherwise. 
          */
         bool search(const string &key) const;
+	bool search(const string& key, Node*) const;
         /* Find and return the largest value in the tree. Return an empty string if the tree is empty */
         string largest() const;
+	string largest(const string&, Node*) const;
         /* Find and return the smallest value in the tree. Return an emtpy string if the tree is empty */
         string smallest() const;
+	string smallest(const string&, Node*) const;
         /* Compute and return the height of a particular string in the tree. 
            The height of a leaf node is 0 (count the number of edges on the longest path). 
            Return -1 if the string does not exist. 
          */
         int height(const string&) const;
+	int height(const string&, Node*) const;
 
         /* Printing */
         /* For all printing orders, each node should be displayed as follows:
            <string> (<count>)
            e.g. goodbye(1), Hello World(3)
            */
+	Node* returnNode(const string& key, Node* node) const;
+	int max(int left, int right) const;
         void preOrder() const;
         void postOrder() const;
         void inOrder() const;
+	void preOrder(Node*) const;
+        void postOrder(Node*) const;
+        void inOrder(Node*) const;
 };
 
 #endif // __BSTREE_H__

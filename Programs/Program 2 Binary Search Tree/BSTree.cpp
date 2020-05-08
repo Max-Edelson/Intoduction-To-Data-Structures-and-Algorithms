@@ -120,9 +120,9 @@ void BSTree::remove(const string &key) {
 				assert(cur->left);
 				assert(cur->right);
 				//find successor
-				Node* suc = cur->right;
-				while (suc->left) {
-					suc = suc->left;
+				Node* suc = cur->left;
+				while (suc->right) {
+					suc = suc->right;
 				}
 				
 				string successorData = suc->data;
@@ -232,7 +232,7 @@ static void nodePrint(const Node* node, int level) {
 
 void BSTree::print() const
 {
-	nodePrint(root, 0);
+//	nodePrint(root, 0);
 }
 
 string BSTree::smallest() const {

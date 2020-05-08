@@ -11,7 +11,7 @@ void printOrders(BSTree tree) {
   tree.inOrder( );
   cout << endl << "Postorder = ";
   tree.postOrder( );
-  cout << endl;
+  cout << endl << endl;
 }
 
 int menu() {
@@ -50,15 +50,15 @@ int main( ) {
         if (choice == 1) {
           cout << "Enter string to insert: " << endl;
 		getline(cin, entry);
-//		tree.print();
+		tree.print();
 		tree.insert(entry);
-//		tree.print();
+		tree.print();
         } else if (choice == 2) {
           cout << "Enter string to remove: " << endl;
 		getline(cin, entry);
-//		tree.print();
+		tree.print();
 		tree.remove(entry);
-//		tree.print();
+		tree.print();
         } else if (choice == 3) {
 		printOrders(tree);
         } else if (choice == 4) {
@@ -80,7 +80,7 @@ int main( ) {
           cout << "Enter string: " << endl;;
 		getline(cin, entry);
 		int heightOfEntry = tree.height(entry);
-		cout << "Height of subtree rooted at " << entry << ": " << heightOfEntry << endl;
+		cout << "Height of subtree rooted at " << entry << ": " << heightOfEntry << endl<< endl;
         }
 	else if (choice == '8')
 		break;

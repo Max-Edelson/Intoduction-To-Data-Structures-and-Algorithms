@@ -22,6 +22,7 @@ class BSTree {
            the count variable should be incremented 
          */
         void insert(const string &newString);
+	void print() const;
         /* Remove a specified string from the tree. 
            Be sure to maintain all bianry search tree properties. 
            If removing a node with a count greater than 1, just decrement the count, otherwise, 

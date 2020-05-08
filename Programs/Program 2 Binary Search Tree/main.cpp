@@ -16,7 +16,7 @@ void printOrders(BSTree tree) {
 
 int menu() {
   int choice = 0;
-  cout << endl << "Enter menu choice: ";
+  cout << "Enter menu choice: ";
   cout << endl;
   cout 
     << "1. Insert" << endl
@@ -48,13 +48,17 @@ int main( ) {
     while (choice != 8) {
     
         if (choice == 1) {
-          cout << "Enter string to insert: ";
+          cout << "Enter string to insert: " << endl;
 		getline(cin, entry);
+//		tree.print();
 		tree.insert(entry);
+//		tree.print();
         } else if (choice == 2) {
           cout << "Enter string to remove: " << endl;
 		getline(cin, entry);
+//		tree.print();
 		tree.remove(entry);
+//		tree.print();
         } else if (choice == 3) {
 		printOrders(tree);
         } else if (choice == 4) {
@@ -65,11 +69,11 @@ int main( ) {
 		else
 			cout << endl << "Found" << endl;
         } else if (choice == 5) {
-          cout << "Smallest: " << endl;
+          cout << "Smallest: ";
 		string smallest = tree.smallest();
 		cout << smallest << endl;
         } else if (choice == 6) {
-          cout << "Largest: " << endl;
+          cout << "Largest: ";
 		string largest = tree.largest();
 		cout << largest << endl;
         } else if (choice == 7) {

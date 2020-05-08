@@ -1,6 +1,7 @@
 #include "BSTree.h"
 
 #include <iostream>
+#include <assert.h>
 
 using namespace std;
 
@@ -71,6 +72,7 @@ void BSTree::remove(const string &key) {
 						par->left = nullptr;
 					}
 					else {
+						assert(par->right == cur);
 						par->right = nullptr;
 					}
 				}
@@ -88,6 +90,7 @@ void BSTree::remove(const string &key) {
                                                 par->left = cur->left;
                                         }
                                         else {
+						assert(par->right == cur);
                                                 par->right = cur->left;
                                         }
                                 }
@@ -105,6 +108,7 @@ void BSTree::remove(const string &key) {
                                                 par->left = cur->right;
                                         }
                                         else {
+						assert(par->right == cur);
                                                 par->right = cur->right;
                                         }
                                 }
@@ -113,6 +117,8 @@ void BSTree::remove(const string &key) {
                                 }
                         }
 			else {
+				assert(cur->left);
+				assert(cur->right);
 				//find successor
 				Node* suc = cur->right;
 				while (suc->left) {
@@ -120,10 +126,15 @@ void BSTree::remove(const string &key) {
 				}
 				
 				string successorData = suc->data;
-				remove(suc->data);
+				int suc_occ = suc->occurances;
+			
+				for (int i = 0; i < suc_occ; i++) {
+					remove(suc->data);
+				}
 				cur->data = successorData;
+				cur->occurances = suc_occ;
 			}
-			return;
+		break;
 		}				
 		else if (cur->data < key) {
 			par = cur;
@@ -201,6 +212,27 @@ string BSTree::largest(const string& largestString, Node* node) const {
 	}
 
 	return newLargest;
+}
+
+static void nodePrint(const Node* node, int level) {
+	cout << "*";
+	for (int i = 0; i < level; i++) 
+		cout << "	";
+
+	if (!node) {
+		cout << "NULL" << endl;
+		return;
+	}
+
+	cout << node->data << endl;;
+	nodePrint(node->left, level + 1);
+	nodePrint(node->right, level + 1);
+	
+}
+
+void BSTree::print() const
+{
+	nodePrint(root, 0);
 }
 
 string BSTree::smallest() const {

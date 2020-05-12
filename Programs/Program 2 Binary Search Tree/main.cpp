@@ -11,12 +11,12 @@ void printOrders(BSTree tree) {
   tree.inOrder( );
   cout << endl << "Postorder = ";
   tree.postOrder( );
-  cout << endl << endl;
+  cout << endl;
 }
 
 int menu() {
   int choice = 0;
-  cout << "Enter menu choice: ";
+  cout << endl << "Enter menu choice: ";
   cout << endl;
   cout 
     << "1. Insert" << endl
@@ -80,7 +80,7 @@ int main( ) {
           cout << "Enter string: " << endl;;
 		getline(cin, entry);
 		int heightOfEntry = tree.height(entry);
-		cout << "Height of subtree rooted at " << entry << ": " << heightOfEntry << endl<< endl;
+		cout << "Height of subtree rooted at " << entry << ": " << heightOfEntry << endl;
         }
 	else if (choice == '8')
 		break;

@@ -1,0 +1,7 @@
+﻿  Graph.cpp
+C:\Users\mx300\Documents\GitHub\Intoduction-To-Data-Structures-and-Algorithms\Labs\Lab 10 Graph\Lab 10 Graph\Lab 10 Graph\Graph.cpp(40,22): warning C4018: '<': signed/unsigned mismatch
+C:\Users\mx300\Documents\GitHub\Intoduction-To-Data-Structures-and-Algorithms\Labs\Lab 10 Graph\Lab 10 Graph\Lab 10 Graph\Graph.cpp(52,22): warning C4018: '<': signed/unsigned mismatch
+C:\Users\mx300\Documents\GitHub\Intoduction-To-Data-Structures-and-Algorithms\Labs\Lab 10 Graph\Lab 10 Graph\Lab 10 Graph\Graph.cpp(90,31): warning C4834: discarding return value of function with 'nodiscard' attribute
+  main.cpp
+  Generating Code...
+  Lab 10 Graph.vcxproj -> C:\Users\mx300\Documents\GitHub\Intoduction-To-Data-Structures-and-Algorithms\Labs\Lab 10 Graph\Lab 10 Graph\Debug\Lab 10 Graph.exe

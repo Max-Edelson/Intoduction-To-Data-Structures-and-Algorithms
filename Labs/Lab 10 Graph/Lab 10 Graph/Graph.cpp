@@ -110,7 +110,7 @@ void Graph::printGraph() const {
 	}
 	
 	for (unsigned i = 0; i < vertices.size(); i++) { 
-		list< pair<int,int> >::const_iterator itList;
+		list< pair<int,int> >::const_sudo apt-get updateiterator itList;
 		for (itList = vertices.at(i).neighbors.begin(); itList != vertices.at(i).neighbors.end(); itList++) {
 			cout << vertices.at(i).label << " " << vertices.at(itList->first).label << " " << itList->second << endl;
 		}

@@ -13,15 +13,20 @@ Jug::~Jug() {}
 
 int Jug::solve(string &solution) {
 
-	if (capacityA <= 0 || capacityB <= 0 || capacityA > capacityB)
-                return -1; 
-        if (goal > capacityB || goal > 1000 || capacityB > 1000)
-                return -1; 
-        if (costFillA <= 0 || costFillB <= 0 || costEmptyA <= 0 || costEmptyB <= 0 || costPourA <= 0 || costPourB <= 0)
+	if (capacityA <= 0 || capacityB <= 0 || capacityA > capacityB) {
+		solution = "";
                 return -1;
+	}
+        if (goal > capacityB || goal > 1000 || capacityB > 1000) {
+		solution = "";
+                return -1; 
+	}
+        if (costFillA <= 0 || costFillB <= 0 || costEmptyA <= 0 || costEmptyB <= 0 || costPourA <= 0 || costPourB <= 0) {
+		solution = "";
+                return -1;
+	}
 
 	queue<node *> queue;
-	vector<string> alreadyVisited;
 	
 	node *temp = new node(fillA,0,0,costFillA,0,"");
 	queue.push(temp);
@@ -78,7 +83,7 @@ int Jug::solve(string &solution) {
 
 		for (int i = 0; i < 6; i++) {
 			if (i != curr->Action) {
-				if (i == 0 && curr->getA() == capacityA) 
+/*				if (i == 0 && curr->getA() == capacityA) 
 					//invalid
 					;
 				else if (i == 1 && curr->getB() == capacityB)
@@ -96,51 +101,50 @@ int Jug::solve(string &solution) {
 				else if ((i == 5 && curr->getA() == capacityB) || (i == 5 && curr->getB() == 0))
 					//invalid
 					;
-				else {
-					node *newNode;
-					
-					switch (i) {
-							case (0):
-							newNode = new node(fillA, capacityA, curr->getB(), costFillA, curr->getTotal(), curr->answer);
-							queue.push(newNode);
-							break;
-						case (1):
-                                                        newNode = new node(fillB, curr->getA(), capacityB, costFillB, curr->getTotal(), curr->answer);
-							queue.push(newNode);
-                                                        break;
-						case (2):
-                                                        newNode = new node(emptyA, 0, curr->getB(), costEmptyA, curr->getTotal(), curr->answer);
-							queue.push(newNode);
-                                                        break;
-						case (3):
-                                                        newNode = new node(emptyB, curr->getA(), 0, costEmptyB, curr->getTotal(), curr->answer);
-							queue.push(newNode);
-                                                        break;
-						case (4):
-							if (curr->getB() + curr->getA() <= capacityB) {
-								newNode = new node(pourAB, 0, curr->getB() + curr->getA(), costPourA, curr->getTotal(), curr->answer);
-							}
-							else {
-								int difference = capacityB - curr->getB();
-								newNode = new node(pourAB, curr->getA() - difference, curr->getB() + difference, costPourA, curr->getTotal(), curr->answer);
-							}
-							queue.push(newNode);
-                                                        break;
-						case (5):
-							if (curr->getB() + curr->getA() <= capacityA) {
-                                                                newNode = new node(pourBA, curr->getA() + curr->getB(), 0, costPourB, curr->getTotal(), curr->answer);
-                                                        }
-                                                        else {
-                                                                int difference = capacityA - curr->getA();
-                                                                newNode = new node(pourBA, curr->getA() + difference, curr->getB() - difference, costPourB, curr->getTotal(), curr->answer);
-                                                        }
-							queue.push(newNode);
-                                                        break;
-						default:
-							cout << "someone broke math" << endl;
-							break;
-					} 
-				}
+*/
+				node *newNode;
+				
+				switch (i) {
+					case (0):
+						newNode = new node(fillA, capacityA, curr->getB(), costFillA, curr->getTotal(), curr->answer);
+						queue.push(newNode);
+						break;
+					case (1):
+						newNode = new node(fillB, curr->getA(), capacityB, costFillB, curr->getTotal(), curr->answer);
+						queue.push(newNode);
+						break;
+					case (2):
+						newNode = new node(emptyA, 0, curr->getB(), costEmptyA, curr->getTotal(), curr->answer);
+						queue.push(newNode);
+						break;
+					case (3):
+						newNode = new node(emptyB, curr->getA(), 0, costEmptyB, curr->getTotal(), curr->answer);
+						queue.push(newNode);
+						break;
+					case (4):
+						if (curr->getB() + curr->getA() <= capacityB) {
+							newNode = new node(pourAB, 0, curr->getB() + curr->getA(), costPourA, curr->getTotal(), curr->answer);
+						}
+						else {
+							int difference = capacityB - curr->getB();
+							newNode = new node(pourAB, curr->getA() - difference, curr->getB() + difference, costPourA, curr->getTotal(), curr->answer);
+						}
+						queue.push(newNode);
+						break;
+					case (5):
+						if (curr->getB() + curr->getA() <= capacityA) {
+							newNode = new node(pourBA, curr->getA() + curr->getB(), 0, costPourB, curr->getTotal(), curr->answer);
+						}
+						else {
+							int difference = capacityA - curr->getA();
+							newNode = new node(pourBA, curr->getA() + difference, curr->getB() - difference, costPourB, curr->getTotal(), curr->answer);
+						}
+						queue.push(newNode);
+						break;
+					default:
+						cout << "someone broke math" << endl;
+						break;
+				} 
 			}	
 		}
 	}

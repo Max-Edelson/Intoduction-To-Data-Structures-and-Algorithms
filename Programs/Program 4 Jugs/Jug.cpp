@@ -2,165 +2,202 @@
 
 #include <iostream>
 #include <queue>
-#include <string>
-#include <vector>
+#include <assert.h>
 
 using namespace std;
 
-Jug::Jug(int Ca, int Cb, int N, int cfA, int cfB, int ceA, int ceB, int cpAB, int cpBA) : capacityA(Ca), capacityB(Cb), goal(N), costFillA(cfA), costFillB(cfB), costEmptyA(ceA), costEmptyB(ceB), costPourA(cpAB), costPourB(cpBA) {}
-
-Jug::~Jug() {}
-
-int Jug::solve(string &solution) {
-
-	if (capacityA <= 0 || capacityB <= 0 || capacityA > capacityB) {
-		solution = "";
-                return -1;
-	}
-        if (goal > capacityB || goal > 1000 || capacityB > 1000) {
-		solution = "";
-                return -1; 
-	}
-        if (costFillA <= 0 || costFillB <= 0 || costEmptyA <= 0 || costEmptyB <= 0 || costPourA <= 0 || costPourB <= 0) {
-		solution = "";
-                return -1;
-	}
-
-	queue<node *> queue;
-	
-	node *temp = new node(fillA,0,0,costFillA,0,"");
-	queue.push(temp);
-
-	temp = new node(fillB,0,0,costFillB,0,"");
-        queue.push(temp);
-
-	temp = new node(emptyA,0,0,costEmptyA,0,"");
-        queue.push(temp);
-
-	temp = new node(emptyB,0,0,costEmptyB,0,"");
-        queue.push(temp);
-
-	temp = new node(pourAB,0,0,costPourA,0,"");
-        queue.push(temp);
-	
-	temp = new node(pourBA,0,0,costPourB,0,"");
-        queue.push(temp);
-
-	while (!queue.empty()) {
-		node *curr = queue.front();
-		queue.pop();
-		
-		if (curr->getA() == 0 && curr->getB() == goal) {
-			//done
-			for (unsigned i = 0; i < curr->answer.size(); i++) {
-
-				char character = curr->answer.at(i);			
-				if (character == '0')
-					cout << "fill A" << endl;
-
-				else if (character == '1')
-					cout << "fill B" << endl;
-
-				else if (character == '2')
-					cout << "empty A" << endl;
-
-				else if (character == '3')
-					cout << "empty B" << endl;
-
-				else if (character == '4')
-					cout << "pour A B" << endl;
-
-				else if (character == '5')
-					cout << "pour B A" << endl;
-		
-				else 
-					cout << "mhmmm thats wrong" << endl;
-
-			}
-			cout << "success " << curr->getTotal();
-			return 1;
-		}	
-
-		for (int i = 0; i < 6; i++) {
-			if (i != curr->Action) {
-/*				if (i == 0 && curr->getA() == capacityA) 
-					//invalid
-					;
-				else if (i == 1 && curr->getB() == capacityB)
-					//invalid
-					;
-				else if (i == 2 && curr->getA() == 0)
-					// invalid
-					;
-				else if (i == 3 && curr->getB() == 0)
-					//invalid
-					;
-				else if ((i == 4 && curr->getA() == 0) || (i == 4 && curr->getB() == capacityB))
-					//invalid
-					;
-				else if ((i == 5 && curr->getA() == capacityB) || (i == 5 && curr->getB() == 0))
-					//invalid
-					;
-*/
-				node *newNode;
-				
-				switch (i) {
-					case (0):
-						newNode = new node(fillA, capacityA, curr->getB(), costFillA, curr->getTotal(), curr->answer);
-						queue.push(newNode);
-						break;
-					case (1):
-						newNode = new node(fillB, curr->getA(), capacityB, costFillB, curr->getTotal(), curr->answer);
-						queue.push(newNode);
-						break;
-					case (2):
-						newNode = new node(emptyA, 0, curr->getB(), costEmptyA, curr->getTotal(), curr->answer);
-						queue.push(newNode);
-						break;
-					case (3):
-						newNode = new node(emptyB, curr->getA(), 0, costEmptyB, curr->getTotal(), curr->answer);
-						queue.push(newNode);
-						break;
-					case (4):
-						if (curr->getB() + curr->getA() <= capacityB) {
-							newNode = new node(pourAB, 0, curr->getB() + curr->getA(), costPourA, curr->getTotal(), curr->answer);
-						}
-						else {
-							int difference = capacityB - curr->getB();
-							newNode = new node(pourAB, curr->getA() - difference, curr->getB() + difference, costPourA, curr->getTotal(), curr->answer);
-						}
-						queue.push(newNode);
-						break;
-					case (5):
-						if (curr->getB() + curr->getA() <= capacityA) {
-							newNode = new node(pourBA, curr->getA() + curr->getB(), 0, costPourB, curr->getTotal(), curr->answer);
-						}
-						else {
-							int difference = capacityA - curr->getA();
-							newNode = new node(pourBA, curr->getA() + difference, curr->getB() - difference, costPourB, curr->getTotal(), curr->answer);
-						}
-						queue.push(newNode);
-						break;
-					default:
-						cout << "someone broke math" << endl;
-						break;
-				} 
-			}	
-		}
-	}
-	return 0;
+int min(int a, int b) {
+	int result = a;
+	if (b > a)
+		result = b;
+	return result;
 }
 
+const string Jug::actionString(enum Action a) {
+	switch (a) {
+		case fillA: return "fillA";
+		case fillB: return "fillB";	
+		case emptyA: return "emptyA";
+		case emptyB: return "emptyB";
+		case pourAB: return "pourAB";
+		case pourBA: return "pourBA";
+		default:
+			assert(0);
+	}
+}
 
+int MAX_CAP = 100;
 
+Jug::Jug(int cA, int cB, int n, int c1, int c2, int c3, int c4, int c5, int c6) : capA(cA), capB(cB), goal(n), cfA(c1), cfB(c2), ceA(c3), ceB(c4), cpAB(c5), cpBA(c6) {
 
+	//set the state for all possible verticies to invalid
+	for (int i = 0; i < capA; i++) {
+		for (int j = 0; j < capA; j++) {
+			for (int i2 = 0; i2 < capA; i2++) {
+				for (int j2 = 0; j2 < capB; j++) {
+					graph[index(i,j)][index(i2,j2)] = invalid;
+				}
+			}
+		}
+	}
 
+	//for all starting states, determine 6 possible actions and update the graph
+	for (int i = 0; i < capA; i++) {
+		for (int j = 0; j < capB; j++) {
+			Action action;
+			int fullnessA;
+			int fullnessB;
+			int pourAmount;
+			int x;
+			int y;
 
+			// x is our current state
+			// y is the state that we will be going to
+			x = index(i, j);
 
+			//fill a
+			action = fillA;
+			fullnessA = capA;
+			fullnessB = j;
+			y = index(fullnessA, fullnessB);
+			graph[x][y] = action;
 
+			//fill b
+			action = fillB;
+			fullnessA = i;
+			fullnessB = capB;
+			y = index(fullnessA, fullnessB);
+                        graph[x][y] = action;
 
+			//empty a
+			action = emptyA;
+			fullnessA = 0;
+			fullnessB = j;
+			y = index(fullnessA, fullnessB);
+                        graph[x][y] = action;
 
+			//empty b
+			action = emptyB;
+			fullnessA = i;
+			fullnessB = 0;
+			y = index(fullnessA, fullnessB);
+                        graph[x][y] = action;
 
+			//pour AB
+			action = pourAB;
+			fullnessA = i;
+			fullnessB = j;
+			pourAmount = min(fullnessA, capB - fullnessB);
+			fullnessA -= pourAmount;
+			fullnessB += pourAmount;
+			y = index(fullnessA, fullnessB);
+                        graph[x][y] = action;
 
+			//pour BA
+			action = pourBA;
+			fullnessA = i;
+			fullnessB = j;
+			pourAmount = min(capA - fullnessA, fullnessB);
+			fullnessA += pourAmount;
+			fullnessB -= pourAmount;
+			y = index(fullnessA, fullnessB);
+                        graph[x][y] = action;
+		}
+	}
 
+	for (int i = 0; i < capA; i++) {
+		for (int j = 0; j < capB; j++) {
+			graph[index(i, j)][index(i, j)] = invalid;
+		}
+	}
+}
 
+int Jug::index(int fillA, int fillB) {
+	return (fillA * (capA + 1)) + fillB;
+}
+
+int Jug::determineCost(enum Action action) {
+	switch (action) {
+		case fillA: return cfA;
+		case fillB: return cfB;
+		case emptyA: return ceA;
+		case emptyB: return ceB;
+		case pourAB: return pourAB;
+		case pourBA: return pourBA;
+		default: 
+			assert(0);
+	}
+}
+
+int Jug::solve(string &solution) {
+	if (capA > capB || capB <= 0 || capA <= 0 || goal >= 1000 || goal > capB || capB > 1000)
+		return -1;
+		
+	int solved = false;
+	bool visited[MAX_CAP];
+	vector<Vertex *> vector;
+
+	//create an initial edge for the initial state
+	Vertex* ptr = new Vertex;
+	ptr->fillA = 0;
+	ptr->fillB = 0;
+	ptr->action = invalid;
+	ptr->history = "";
+	ptr->cost = 0;
+	vector.push_back(ptr);
+
+	for (int i = 0; i < MAX_CAP; i++)
+		visited[i] = false;
+
+	//BFS
+	while (vector.size() > 0) {
+		int min = 0;
+		for (unsigned k = 0; k < vector.size(); k++) {
+			if (vector.at(k)->cost < vector.at(min)->cost)
+				min = k;
+		}
+		Vertex *ptr = vector.at(min);
+		vector.erase(vector.begin() + min);
+
+		assert(ptr != nullptr);
+		int x = index(ptr->fillA, ptr->fillB);
+		if (visited[x])
+			//duplicate
+			;
+		else {
+			visited[x] = true;
+			if (ptr->fillA == 0 && ptr->fillB == goal) {
+				solved = true;
+				string hist = "\nSuccess " + to_string(ptr->cost);
+				ptr->history += hist;
+				solution = ptr->history;
+			}
+			else {
+				//enqueue all possible nodes
+				for (unsigned i = 0 ; i < capA; i++) {
+					for (unsigned j = 0; j < capB; j++) {
+						int y = index(i,j);
+						Action a = graph[x][y];
+						if (a != invalid) {
+							Vertex* curr = new Vertex;
+							curr->fillA = i;
+							curr->fillB = j;
+							curr->action = a;
+							curr->cost = ptr->cost + determineCost(a);
+							string s = ptr->history;
+							s += "\n" + actionString(a);
+							curr->history = s;
+							vector.push_back(curr);
+						}
+					}
+				}
+			}
+		}
+		delete ptr;
+		ptr = nullptr;
+	}
+	if (!solved)
+		return 0;
+	else
+		return 1;
+}

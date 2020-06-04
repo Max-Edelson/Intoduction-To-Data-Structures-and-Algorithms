@@ -1,5 +1,4 @@
 #include "Jug.h"
-
 #include <iostream>
 #include <queue>
 #include <assert.h>
@@ -8,7 +7,7 @@ using namespace std;
 
 int min(int a, int b) {
 	int result = a;
-	if (b > a)
+	if (b < a)
 		result = b;
 	return result;
 }
@@ -26,7 +25,7 @@ const string Jug::actionString(enum Action a) {
 	}
 }
 
-int MAX_CAP = 100;
+int MAX_CAP = 300;
 
 Jug::~Jug() {}
 
@@ -34,15 +33,14 @@ Jug::Jug(int cA, int cB, int n, int c1, int c2, int c3, int c4, int c5, int c6) 
 
 	//set the state for all possible verticies to invalid
 	for (int i = 0; i <= capA; i++) {
-		for (int j = 0; j <= capA; j++) {
+		for (int j = 0; j <= capB; j++) {
 			for (int i2 = 0; i2 <= capA; i2++) {
-				for (int j2 = 0; j2 <= capB; j++) {
+				for (int j2 = 0; j2 <= capB; j2++) {
 					graph[index(i,j)][index(i2,j2)] = invalid;
 				}
 			}
 		}
 	}
-
 	//for all starting states, determine 6 possible actions and update the graph
 	for (int i = 0; i <= capA; i++) {
 		for (int j = 0; j <= capB; j++) {
@@ -84,7 +82,6 @@ Jug::Jug(int cA, int cB, int n, int c1, int c2, int c3, int c4, int c5, int c6) 
 			fullnessB = 0;
 			y = index(fullnessA, fullnessB);
                         graph[x][y] = action;
-
 			//pour AB
 			action = pourAB;
 			fullnessA = i;
@@ -115,7 +112,7 @@ Jug::Jug(int cA, int cB, int n, int c1, int c2, int c3, int c4, int c5, int c6) 
 }
 
 int Jug::index(int fillA, int fillB) {
-	return (fillA * (capA + 1)) + fillB;
+	return (fillA * (capB + 1)) + fillB;
 }
 
 int Jug::determineCost(enum Action action) {
@@ -132,9 +129,10 @@ int Jug::determineCost(enum Action action) {
 }
 
 int Jug::solve(string &solution) {
-	if (capA > capB || capB <= 0 || capA <= 0 || goal >= 1000 || goal > capB || capB > 1000)
-		return -1;
-		
+/*	if (0 >= capA || capB < capA || goal > capB || capB > 1000) // preconditions
+        	return -1;
+	*/
+
 	int solved = false;
 	bool visited[MAX_CAP];
 	vector<Vertex *> vector;
@@ -147,7 +145,6 @@ int Jug::solve(string &solution) {
 	ptr->history = "";
 	ptr->cost = 0;
 	vector.push_back(ptr);
-
 	for (int i = 0; i < MAX_CAP; i++)
 		visited[i] = false;
 
@@ -162,6 +159,8 @@ int Jug::solve(string &solution) {
 		vector.erase(vector.begin() + min);
 
 		assert(ptr != nullptr);
+		
+		cout << "made it" << endl;	
 		int x = index(ptr->fillA, ptr->fillB);
 		if (visited[x])
 			//duplicate

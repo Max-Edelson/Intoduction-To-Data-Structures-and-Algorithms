@@ -26,7 +26,7 @@ class Jug {
         int solve(string &solution);
         void buildGraph();
     private:
-	Action graph[100][100];
+	Action graph[300][300];
 	const string actionString(enum Action);
 	int index(int, int);
 	int determineCost(enum Action);

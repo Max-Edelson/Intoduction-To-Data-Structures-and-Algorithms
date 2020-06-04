@@ -14,12 +14,12 @@ int min(int a, int b) {
 
 const string Jug::actionString(enum Action a) {
 	switch (a) {
-		case fillA: return "fillA";
-		case fillB: return "fillB";	
-		case emptyA: return "emptyA";
-		case emptyB: return "emptyB";
-		case pourAB: return "pourAB";
-		case pourBA: return "pourBA";
+		case fillA: return "fill A";
+		case fillB: return "fill B";	
+		case emptyA: return "empty A";
+		case emptyB: return "empty B";
+		case pourAB: return "pour A B";
+		case pourBA: return "pour B A";
 		default:
 			assert(0);
 	}
@@ -60,7 +60,8 @@ Jug::Jug(int cA, int cB, int n, int c1, int c2, int c3, int c4, int c5, int c6) 
 			fullnessA = capA;
 			fullnessB = j;
 			y = index(fullnessA, fullnessB);
-			graph[x][y] = action;
+			if (x != y)
+				graph[x][y] = action;
 
 			//fill b
 			action = fillB;
@@ -121,17 +122,19 @@ int Jug::determineCost(enum Action action) {
 		case fillB: return cfB;
 		case emptyA: return ceA;
 		case emptyB: return ceB;
-		case pourAB: return pourAB;
-		case pourBA: return pourBA;
+		case pourAB: return cpAB;
+		case pourBA: return cpBA;
 		default: 
 			assert(0);
 	}
 }
 
 int Jug::solve(string &solution) {
-/*	if (0 >= capA || capB < capA || goal > capB || capB > 1000) // preconditions
+	if (0 >= capA || capB < capA || goal > capB || capB > 1000) { 
+		// preconditions
+		solution = "";
         	return -1;
-	*/
+	}
 
 	int solved = false;
 	bool visited[MAX_CAP];
@@ -160,7 +163,6 @@ int Jug::solve(string &solution) {
 
 		assert(ptr != nullptr);
 		
-		cout << "made it" << endl;	
 		int x = index(ptr->fillA, ptr->fillB);
 		if (visited[x])
 			//duplicate
@@ -175,8 +177,8 @@ int Jug::solve(string &solution) {
 			}
 			else {
 				//enqueue all possible nodes
-				for (unsigned i = 0 ; i <= capA; i++) {
-					for (unsigned j = 0; j <= capB; j++) {
+				for (int i = 0 ; i <= capA; i++) {
+					for (int j = 0; j <= capB; j++) {
 						int y = index(i,j);
 						Action a = graph[x][y];
 						if (a != invalid) {
@@ -197,8 +199,10 @@ int Jug::solve(string &solution) {
 		delete ptr;
 		ptr = nullptr;
 	}
+
+	cout << "solved: " << solved << endl;
+
 	if (!solved)
 		return 0;
-	else
-		return 1;
+	return 1;
 }

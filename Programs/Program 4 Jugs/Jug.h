@@ -10,7 +10,7 @@ struct Vertex {
 	Action action;
 	string history;
 	int cost;
-	Vertex();
+	Vertex() {}
 };
 
 

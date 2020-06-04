@@ -28,13 +28,15 @@ const string Jug::actionString(enum Action a) {
 
 int MAX_CAP = 100;
 
+Jug::~Jug() {}
+
 Jug::Jug(int cA, int cB, int n, int c1, int c2, int c3, int c4, int c5, int c6) : capA(cA), capB(cB), goal(n), cfA(c1), cfB(c2), ceA(c3), ceB(c4), cpAB(c5), cpBA(c6) {
 
 	//set the state for all possible verticies to invalid
-	for (int i = 0; i < capA; i++) {
-		for (int j = 0; j < capA; j++) {
-			for (int i2 = 0; i2 < capA; i2++) {
-				for (int j2 = 0; j2 < capB; j++) {
+	for (int i = 0; i <= capA; i++) {
+		for (int j = 0; j <= capA; j++) {
+			for (int i2 = 0; i2 <= capA; i2++) {
+				for (int j2 = 0; j2 <= capB; j++) {
 					graph[index(i,j)][index(i2,j2)] = invalid;
 				}
 			}
@@ -42,8 +44,8 @@ Jug::Jug(int cA, int cB, int n, int c1, int c2, int c3, int c4, int c5, int c6) 
 	}
 
 	//for all starting states, determine 6 possible actions and update the graph
-	for (int i = 0; i < capA; i++) {
-		for (int j = 0; j < capB; j++) {
+	for (int i = 0; i <= capA; i++) {
+		for (int j = 0; j <= capB; j++) {
 			Action action;
 			int fullnessA;
 			int fullnessB;
@@ -105,8 +107,8 @@ Jug::Jug(int cA, int cB, int n, int c1, int c2, int c3, int c4, int c5, int c6) 
 		}
 	}
 
-	for (int i = 0; i < capA; i++) {
-		for (int j = 0; j < capB; j++) {
+	for (int i = 0; i <= capA; i++) {
+		for (int j = 0; j <= capB; j++) {
 			graph[index(i, j)][index(i, j)] = invalid;
 		}
 	}
@@ -174,8 +176,8 @@ int Jug::solve(string &solution) {
 			}
 			else {
 				//enqueue all possible nodes
-				for (unsigned i = 0 ; i < capA; i++) {
-					for (unsigned j = 0; j < capB; j++) {
+				for (unsigned i = 0 ; i <= capA; i++) {
+					for (unsigned j = 0; j <= capB; j++) {
 						int y = index(i,j);
 						Action a = graph[x][y];
 						if (a != invalid) {

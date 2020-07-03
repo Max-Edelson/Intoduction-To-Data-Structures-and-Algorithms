@@ -171,7 +171,7 @@ int Jug::solve(string &solution) {
 			visited[x] = true;
 			if (ptr->fillA == 0 && ptr->fillB == goal) {
 				solved = true;
-				string hist = "\nSuccess " + to_string(ptr->cost);
+				string hist = "\nsuccess " + to_string(ptr->cost);
 				ptr->history += hist;
 				solution = ptr->history;
 			}
